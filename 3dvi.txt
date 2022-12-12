@@ -1,0 +1,248 @@
+var pr = app.project;
+var rootItem = pr.rootItem;
+
+alert(pr.name);
+alert(pr.path);
+
+//Create a bin 
+var videoBin = rootItem.createBin("Video");
+var audioBin = rootItem.createBin("Audio");
+var imageBin = rootItem.createBin("Image");
+
+videoBin.renameBin("Video");
+videoBin.setColorLabel(5);
+videoBin.moveBin(imageBin);
+
+var numChildren = rootItem.children.numItems;
+var lengthChildren = rootItem.children.length;
+$.writeln(rootItem.children[0].name);
+
+var Seq1 = pr.createNewSequence("Sequence1", "seq1");
+Seq1.videoTracks[0].insertClip(rootItem.children[3], 0);
+var activeSeq = proj.activeSequence;
+
+var numClips = Seq1.videoTracks[0].clips.numItems;
+
+$.writeln("Num Sequences: " + pr.sequences.numSequences);
+$.writeln("Num AudioTracks: " + pr.activeSequence.audioTracks.numTracks);
+$.writeln("Num VideoTracks: " + pr.activeSequence.videoTracks.numTracks);
+
+videoTrack1 = Seq1.videoTracks[0];
+videoTrack1.insertClip(rootItem.children[3], 0);
+clip1 = videoTrack1.clips[0];
+
+length = videoTrack1.clips.length;
+numItems = videoTrack1.clips.numItems;
+
+endLastClip = videoTrack1.clips[videoTrack1.clips.length-1].end;
+videoTrack1.insertClip(rootItem.children[3], endLastClip);
+
+//EFFECTS
+var seq = pr.activeSequence;
+var videoTrack = seq.videoTracks[0];
+var clip = videoTrack.clips[0];
+
+var components = clip.components;
+
+for(var i = 0; i < components.numItems; i++){
+    $.writeln(components[i].displayName);
+}
+
+var opacityComponent = components[0].properties[0];
+opacityComponent.setValue(10);
+
+var opacityComponent = components[0].properties[0];
+opacityComponent.setValue(50);
+
+opacityComponent.setTimeVarying(true);
+
+opacityComponent.addKey(clip.start.seconds);
+opacityComponent.addKey(clip.end.seconds);
+
+opacityComponent.setValueAtKey(clip.start.seconds, 0);
+opacityComponent.setValueAtKey(clip.end.seconds, 100);
+
+
+//Name of every RootItem children
+$.writeln("RootItem Loop Start");
+for(var i=0; i<
+    rootItem.children.numItems; i++){
+    $.writeln(rootItem.children[i].name);
+}
+$.writeln("RootItem Loop End");
+
+//Organize project based on media format
+function organizeProject(){
+    var videoBin = rootItem.createBin("Video");
+    var audioBin = rootItem.createBin("Audio");
+    var imageBin = rootItem.createBin("Image");
+
+    var videoArray = [];
+    var audioArray = [];
+    var imageArray = [];
+    
+
+    for(var i=0; i < rootItem.children.numItems; i++){
+        actual = rootItem.children[i];
+        actualName = actual.name;
+        actualFormat = actualName.substring(actualName.length-3).toLowerCase();
+
+        if(actualFormat == "mp4" || actualFormat == "mts"){
+            videoArray.push(actual);
+        }
+        else if(actualFormat == "mp3" || actualFormat == "wav"){
+            audioArray.push(actual);
+        }
+        else if(actualFormat == "jpg" || actualFormat == "png"){
+            imageArray.push(actual);
+        }
+    }
+    
+    MoveToFolder(videoBin, videoArray);
+    MoveToFolder(audioBin, audioArray);
+    MoveToFolder(imageBin, imageArray);
+
+}
+
+function MoveToFolder(folder, array){
+    for(var i = 0; i < array.length; i++){
+        array[i].moveBin(folder);
+  
+}
+
+
+//vybrat subor cez okno najprv
+var videoBin = rootItem.createBin("Video");
+
+//var filter = "All files"
+
+var systemName = Folder.fs;
+$.writeln(systemName);
+
+if(systemName == "Windows")
+{
+    filter = "*.mp4";
+    $.write("OS je Windows");
+} 
+else if(systemName == "MAC")
+{
+    filer = ""; 
+}
+var file = File.openDialog("Vyberte subor", filter, true);
+
+if(file){
+    var zoznam = [];
+    for(var i = 0; i < file.length; i++){
+        zoznam.push(file[i].fsName)
+    } 
+    //zoznam.push(file.fsName);
+    pr.importFiles(zoznam, 1, videoBin, 0);
+}
+
+var importFolder = Folder.selectDialog("Select folder to import");
+var folderFiles = [];
+folderFiles = importFolder.getFiles();
+var fileNames = [];
+for(var j=0; j<folderFiles.length; j++){
+    var name = folderFiles[j].fsName;
+    if(folderFiles[j] instanceof File){
+    fileNames.push(folderFiles[j].fsName);
+    }a
+}
+proj.importFiles(fileNames, 1, rI, 0);
+
+
+//FILES IN FOLDER, NOT IN SUBFOLDER
+var project = app.project;
+var rI = project.rootItem;
+var fileSystem = Folder.fs;
+var arrayOfFolder = [];
+var importedFolders = Folder.selectDialog("Vyberte priecinok: ");
+var subory = importedFolders.getFiles();
+if(subory){
+    for(var i=0; i<subory.length; i++){
+        if(subory[i] instanceof File){
+            arrayOfFolder.push(subory[i].fsName);
+        }
+    }
+    
+project.importFiles(arrayOfFolder, 1, rI, 0);
+}
+
+var pr = app.project;
+var rootItem = project.rootItem;
+//var seq1 = pr.createNewSequence('Sekv1', '123');
+for(var i=0; i<rootItem.children.numItems; i++){
+    $.writeln(rootItem.children[i].n
+
+
+// seq1.videoTracks[0].insertClip(rootItem.children[0], 0);
+
+var numVideoClips = seq1.videoTracks[0].clips.numItems;
+for(var i=0; i<numVideoClips; i++){
+    var markerName = seq1.videoTracks[0].clips[i].name;
+    var start = seq1.videoTracks[0].clips[i].start.seconds;
+    var end = seq1.videoTracks[0].clips[i].end.seconds;
+    var marker = seq1.markers.createMarker(start);
+    marker.end = end;
+}
+
+//MARKERS PROPERTIES
+for(var i = 0; i < seq1.markers.numMarkers; i++){
+    var marker = seq1.markers[i];
+    switch(i+1){
+        case 1:
+            marker.setTypeAsSegmentation(); 
+            break;
+        case 2:
+            marker.setTypeAsChapter();
+            break;
+        case 3:
+            marker.name = "Maciatko";
+            break;
+
+//OVERWRITE CLIP
+var playerPosition = seq1.getPlayerPosition();
+seq1.videoTracks[0].overwriteClip(rootItem.children[2], playerPosition);
+ 
+//EFFECT
+qe = app.enableQE();
+var seq1 = qe.project.getActiveSequence(0);
+
+//var effectsVideo = qe.project.getVideoEffectList();
+//$.writeln(effectsVideo);
+
+var videoTrack = seq1.getVideoTrackAt(0);
+var clip = vTrack.getItemAt(0);
+clip.addVideoEffect(qe.project.getVideoEffectByName("Camera Blur"));
+var seq1 = pr.activeSequence;
+
+
+var videoTrack = sekv1.videoTracks[0];
+var clipVideoTrack = videoTrack.clips[0];
+
+for(var i = 0; clipVideoTrack.components.numItems > i; i++){
+    if(clipVideoTrack.components[i].displayName == "Camera Blur"){
+var blurCamera = clipVideoTrack.components[i].properties[0];
+    }
+}
+blurCamera.setValue(50);
+blurCamera.setTimeVarying(1);
+blurCamera.addKey(clipVideoTrack.start.seconds);
+blurCamera.setValueAtKey(clipVideoTrack.start.seconds, 0);
+blurCamera.addKey(clipVideoTrack.end.seconds);
+blurCamera.setValueAtKey(clipVideoTrack.end.seconds, 100);
+
+//VIDEO TRANSITION CEZ QE
+var pr = app.project;
+var rootItem = pr.rootItem;
+qe = app.enableQE();
+var videoTrack = seq1.getVideoTrackAt(0);
+
+var videoTransitionsList = qe.project.getVideoTransitionsList;
+var transition = qe.project.getVideoTransitionByName("Cross Dissolve");
+var clip = vTrack.getItemAt(0);
+clip.addTransition(transition, false, "00;00;1;00");
+
+
+
